@@ -1,0 +1,24 @@
+version: "3"
+services:
+  api-imobiliaria:
+    build:
+      context: ./
+    container_name: api-imobiliaria
+    env_file:
+      - ./.env
+    volumes:
+      - ./:/app
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    restart: on-failure
+  db:
+    image: mongo
+    container_name: db-imobiliaria
+    env_file:
+      - ./.env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASS}
+      MONGO_INITDB_DATABASE: ${DB_NAME}
+    ports:
+      - ${DB_PORT}:${DB_PORT}
