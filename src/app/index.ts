@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 import { IApp } from "./interfaces";
 import express, { Express } from "express";
 import Connection from "../config/database/connection";
