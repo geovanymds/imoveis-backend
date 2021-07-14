@@ -13,7 +13,7 @@ Uma vez que o repositório esteja em sua máquina local, abra o terminal e execu
 ```
 cd imoveis-backend
 ```
-Dentro do repositório use os comandos:
+Renomeie o arquivo '.env.example' para '.env' e use os comandos:
 ```
 npm install
 npm start
