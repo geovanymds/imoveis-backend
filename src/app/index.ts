@@ -6,7 +6,7 @@ import Connection from "../config/database/connection";
 import { MainRouter } from "../routes";
 import { IMainRouter } from "../routes/interfaces";
 import errorHandler from "../middlewares/errorHandler";
-import cors from "cors";
+import cors from "../middlewares/cors";
 
 export default class App implements IApp {
   express: Express;
