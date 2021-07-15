@@ -1,6 +1,7 @@
 import { Imovel, ImovelModel } from "../models";
 import { Request, Response, NextFunction } from "express";
 import { IController, IImovelController } from "./interfaces";
+import HttpException from "../helpers/httpException";
 
 export default class ImovelController
   implements IController, IImovelController
@@ -38,7 +39,7 @@ export default class ImovelController
         message: "Imóvel cadastrado com sucesso.",
       });
     } catch (error) {
-      next(new Error(error || "ERRO GENÉRICO"));
+      next(new HttpException(error.status || 500, error.message));
     }
   }
 }

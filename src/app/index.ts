@@ -5,6 +5,7 @@ import express, { Express } from "express";
 import Connection from "../config/database/connection";
 import { MainRouter } from "../routes";
 import { IMainRouter } from "../routes/interfaces";
+import errorHandler from "../middlewares/errorHandler";
 import cors from "cors";
 
 export default class App implements IApp {
@@ -16,6 +17,7 @@ export default class App implements IApp {
     this.mongoConnect();
     this.middlewares();
     this.router = new MainRouter(this.express);
+    this.handleError();
     this.express.listen(process.env.PORT || 8000);
     console.log(`Listening on port ${process.env.PORT || 8000}`);
   }
@@ -29,5 +31,9 @@ export default class App implements IApp {
     this.express.use(cors);
     this.express.use(express.json({ limit: "20mb" }));
     this.express.use(express.urlencoded({ extended: true, limit: "20mb" }));
+  }
+
+  handleError() {
+    this.express.use(errorHandler);
   }
 }
