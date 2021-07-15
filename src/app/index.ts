@@ -18,8 +18,8 @@ export default class App implements IApp {
     this.middlewares();
     this.router = new MainRouter(this.express);
     this.handleError();
-    this.express.listen(process.env.PORT || 8000);
-    console.log(`Listening on port ${process.env.PORT || 8000}`);
+    this.express.listen(process.env.APP_PORT);
+    console.log(`Listening on port ${process.env.APP_PORT}`);
   }
 
   mongoConnect() {
