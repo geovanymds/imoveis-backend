@@ -8,7 +8,7 @@ export default class ImageController implements IController, IImageController {
     const { originalname, filename, size } = <Express.Multer.File>req.file;
     try {
       const url = `${process.env.APP_URL}/public/images/${filename}`;
-      await ImageModel.create({
+      const image = await ImageModel.create({
         nome: originalname,
         url,
         nomeCompleto: filename,
@@ -17,6 +17,7 @@ export default class ImageController implements IController, IImageController {
 
       return res.status(200).json({
         message: "Imagem salva com sucesso.",
+        image,
       });
     } catch (error) {
       next(new HttpException(error.status || 500, error.message));
