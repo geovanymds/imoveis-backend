@@ -28,7 +28,14 @@ export interface ICorretor {
   tipo: tiposCorretor;
   nome: string;
   creci: string;
-  salario?: number; 
+  salario?: number;
   dataAdmissao?: Date;
   comissao: number;
+}
+
+export interface IImage extends Document {
+  nome: string;
+  tamanho: number;
+  nomeCompleto: string;
+  url: string;
 }

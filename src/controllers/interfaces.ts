@@ -5,3 +5,8 @@ export interface IController {}
 export interface IImovelController {
   cadastrar(req: Request, res: Response, next: NextFunction): Promise<any>;
 }
+
+export interface IImageController {
+  salvar(req: Request, res: Response, next: NextFunction): Promise<any>;
+  deletar(req: Request, res: Response, next: NextFunction): Promise<any>;
+}

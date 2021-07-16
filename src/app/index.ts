@@ -29,8 +29,8 @@ export default class App implements IApp {
 
   middlewares() {
     this.express.use(cors);
-    this.express.use(express.json({ limit: "20mb" }));
-    this.express.use(express.urlencoded({ extended: true, limit: "20mb" }));
+    this.express.use(express.json());
+    this.express.use(express.urlencoded({ extended: true }));
   }
 
   handleError() {
