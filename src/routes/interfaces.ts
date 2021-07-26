@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { IController, IImovelController } from "../controllers/interfaces";
+import { IController } from "../controllers/interfaces";
 
 export interface IEntityRouter {
   uri: string;
