@@ -44,14 +44,27 @@ export default class ImovelController
   }
 
   async listar(req: Request, res: Response, next: NextFunction): Promise<any> {
-    const { tipos } = req.query;
+    let { tipos, local } = req.query;    
     try {
       if (!tipos || typeof tipos != "string") {
         throw new HttpException(400, "Parâmetros inválidos.");
       }
+      
+      if (tipos == 'todos'){        
+        tipos = '["Casa","Apartamento","Sala Comercial","Lote","Chacara","Sitio","Fazenda"]'
+      }
+      tipos = JSON.parse(tipos);
+      if (local == 'urbano'){
+        tipos = tipos.concat(["Casa","Apartamento","Sala Comercial","Lote"])
+      }
+      else if (local == 'rural'){
+        tipos = tipos.concat(["Chacara","Sitio","Fazenda"])
+      }
+      
+             
       const imoveis = await ImovelModel.find()
         .where("tipo")
-        .in(JSON.parse(tipos))
+        .in(tipos)
         .where("vendido")
         .equals(false);
       return res.status(200).json({
@@ -81,6 +94,21 @@ export default class ImovelController
       const imovelSalvo = await imovel.save();
       return res.status(200).json({
         imovelSalvo,
+      });
+    } catch (error) {
+      next(new HttpException(error.status || 500, error.message));
+    }
+  }
+  async deletar(req: Request, res: Response, next: NextFunction): Promise<any> {
+    const { codigos } = req.body;
+    try {
+      if (!codigos) {
+        throw new HttpException(400, "Parâmetros inválidos.");
+      } 
+      await ImovelModel.deleteMany().where("codigo").in(codigos);
+      
+      return res.status(200).json({
+       message: "Imovel(is) deletados com sucesso"
       });
     } catch (error) {
       next(new HttpException(error.status || 500, error.message));
