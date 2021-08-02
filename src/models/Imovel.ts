@@ -40,6 +40,7 @@ export class Imovel implements IImovel {
 const ImovelSchema: mongoose.Schema = new mongoose.Schema({
   codigo: {
     type: String,
+    unique: true,
     required: true,
   },
   tipo: {
