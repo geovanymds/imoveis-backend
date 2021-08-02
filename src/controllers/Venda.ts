@@ -3,19 +3,14 @@ import { Request, Response, NextFunction } from "express";
 import { IController, IVendaController } from "./interfaces";
 import HttpException from "../helpers/httpException";
 
-export default class VendaController
-  implements IController, IVendaController {
+export default class VendaController implements IController, IVendaController {
   async cadastrar(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<any> {
-    const {   
-      codigoImovel,
-      idCorretor,
-      dataVenda,
-      valor,
-      nomeComprador} = req.body;
+    const { codigoImovel, idCorretor, dataVenda, valor, nomeComprador } =
+      req.body;
 
     try {
       const newVenda = new Venda({
@@ -23,16 +18,16 @@ export default class VendaController
         idCorretor,
         dataVenda,
         valor,
-        nomeComprador
+        nomeComprador,
       });
 
       await VendaModel.create(newVenda);
       const imovel = await ImovelModel.find()
         .where("codigo")
         .equals(codigoImovel);
-      if (imovel){
+      if (imovel && !imovel[0].vendido) {
         imovel[0].vendido = true;
-        await imovel[0].save(); 
+        await imovel[0].save();
       } else {
         throw new HttpException(404, "Imovel não encontrado.");
       }
@@ -47,11 +42,8 @@ export default class VendaController
 
   async alterar(req: Request, res: Response, next: NextFunction): Promise<any> {
     const { id } = req.params;
-    const { codigoImovel,
-      idCorretor,
-      dataVenda,
-      valor,
-      nomeComprador } = req.body; 
+    const { codigoImovel, idCorretor, dataVenda, valor, nomeComprador } =
+      req.body;
     try {
       if (!id || typeof id != "string") {
         throw new HttpException(400, "Parâmetros inválidos.");
@@ -64,7 +56,9 @@ export default class VendaController
       venda.idCorretor = !!idCorretor ? idCorretor : venda.idCorretor;
       venda.dataVenda = !!dataVenda ? dataVenda : venda.dataVenda;
       venda.valor = !!valor ? valor : venda.valor;
-      venda.nomeComprador = !!nomeComprador ? nomeComprador : venda.nomeComprador;
+      venda.nomeComprador = !!nomeComprador
+        ? nomeComprador
+        : venda.nomeComprador;
       const vendaSalvo = await venda.save();
       return res.status(200).json({
         vendaSalvo,
@@ -76,10 +70,10 @@ export default class VendaController
 
   async listar(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-        const vendas = await VendaModel.find();
-        return res.status(200).json({
-          vendas,
-        });
+      const vendas = await VendaModel.find();
+      return res.status(200).json({
+        vendas,
+      });
     } catch (error) {
       next(new HttpException(error.status || 500, error.message));
     }
