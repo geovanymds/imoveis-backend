@@ -1,4 +1,4 @@
-import { Venda, VendaModel, ImovelModel } from "../models";
+import { Venda, VendaModel, ImovelModel, CorretorModel } from "../models";
 import { Request, Response, NextFunction } from "express";
 import { IController, IVendaController } from "./interfaces";
 import HttpException from "../helpers/httpException";
@@ -21,11 +21,17 @@ export default class VendaController implements IController, IVendaController {
         nomeComprador,
       });
 
+      const corretor = await CorretorModel.findById(idCorretor);
+
+      if (!corretor) {
+        throw new HttpException(403, "Corretor não cadastrado.");
+      }
+
       await VendaModel.create(newVenda);
       const imovel = await ImovelModel.find()
         .where("codigo")
         .equals(codigoImovel);
-      if (imovel && !imovel[0].vendido) {
+      if (imovel.length > 0 && !imovel[0].vendido) {
         imovel[0].vendido = true;
         await imovel[0].save();
       } else {
