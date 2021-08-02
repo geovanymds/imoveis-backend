@@ -27,11 +27,11 @@ export default class VendaController implements IController, IVendaController {
         throw new HttpException(403, "Corretor não cadastrado.");
       }
 
-      await VendaModel.create(newVenda);
       const imovel = await ImovelModel.find()
         .where("codigo")
         .equals(codigoImovel);
       if (imovel.length > 0 && !imovel[0].vendido) {
+        await VendaModel.create(newVenda);
         imovel[0].vendido = true;
         await imovel[0].save();
       } else {
