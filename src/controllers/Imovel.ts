@@ -4,8 +4,7 @@ import { IController, IImovelController } from "./interfaces";
 import HttpException from "../helpers/httpException";
 
 export default class ImovelController
-  implements IController, IImovelController
-{
+  implements IController, IImovelController {
   async cadastrar(
     req: Request,
     res: Response,
@@ -44,32 +43,30 @@ export default class ImovelController
   }
 
   async listar(req: Request, res: Response, next: NextFunction): Promise<any> {
-    let { tipos, local } = req.query;    
+    let { tipos, local } = req.query;
+
     try {
       if (!tipos || typeof tipos != "string") {
         throw new HttpException(400, "Parâmetros inválidos.");
       }
-      
-      if (tipos == 'todos'){        
+      if (tipos == 'todos') {
         tipos = '["Casa","Apartamento","Sala Comercial","Lote","Chacara","Sitio","Fazenda"]'
       }
-      tipos = JSON.parse(tipos);
-      if (local == 'urbano'){
-        tipos = tipos.concat(["Casa","Apartamento","Sala Comercial","Lote"])
+      if (local == 'urbano' && Array.isArray(tipos)) {
+        tipos = '["Casa", "Apartamento", "Sala Comercial", "Lote"]'
       }
-      else if (local == 'rural'){
-        tipos = tipos.concat(["Chacara","Sitio","Fazenda"])
+      else if (local == 'rural' && Array.isArray(tipos)) {
+        tipos = '["Chacara", "Sitio", "Fazenda"]'
       }
-      
-             
+
       const imoveis = await ImovelModel.find()
-        .where("tipo")
-        .in(tipos)
-        .where("vendido")
-        .equals(false);
+        .where("tipo").in(JSON.parse(tipos))
+        .where("vendido").equals(false);
+      console.log("aqui" + imoveis);
       return res.status(200).json({
         imoveis,
       });
+
     } catch (error) {
       next(new HttpException(error.status || 500, error.message));
     }
@@ -87,7 +84,7 @@ export default class ImovelController
       if (!imovel) {
         throw new HttpException(404, "Imovel não encontrado.");
       }
-      imovel.imagem = imagem;
+      imovel.imagem = !!imagem ? imagem : imovel.imagem;
       imovel.descricao = descricao;
       imovel.proprietarioDoImovel = proprietarioDoImovel;
       imovel.precoSolicitado = precoSolicitado;
@@ -99,16 +96,17 @@ export default class ImovelController
       next(new HttpException(error.status || 500, error.message));
     }
   }
+
   async deletar(req: Request, res: Response, next: NextFunction): Promise<any> {
     const { codigos } = req.body;
     try {
       if (!codigos) {
         throw new HttpException(400, "Parâmetros inválidos.");
-      } 
+      }
       await ImovelModel.deleteMany().where("codigo").in(codigos);
-      
+
       return res.status(200).json({
-       message: "Imovel(is) deletados com sucesso"
+        message: "Imovel(is) deletados com sucesso"
       });
     } catch (error) {
       next(new HttpException(error.status || 500, error.message));

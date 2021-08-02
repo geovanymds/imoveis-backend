@@ -34,7 +34,7 @@ export default class App implements IApp {
     this.express.use(express.json());
     this.express.use(express.urlencoded({ extended: true }));
     this.express.use(
-      "/public/images/",
+      "/imagem",
       express.static(path.resolve(__dirname, "..", "..", "public", "images"))
     );
   }

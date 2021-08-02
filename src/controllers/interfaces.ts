@@ -29,3 +29,7 @@ export interface IVendaController {
 export interface ISalarioController {
   calculoSalario(req: Request, res: Response, next: NextFunction): Promise<any>;
 }
+
+export interface IRelatorioController {
+  getRelatorio(req: Request, res: Response, next: NextFunction): Promise<any>;
+}
