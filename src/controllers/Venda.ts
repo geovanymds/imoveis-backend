@@ -21,7 +21,7 @@ export default class VendaController implements IController, IVendaController {
         nomeComprador,
       });
 
-      const corretor = await CorretorModel.findById(idCorretor);
+      const corretor = await CorretorModel.findOne({ creci: idCorretor });
 
       if (!corretor) {
         throw new HttpException(403, "Corretor não cadastrado.");
