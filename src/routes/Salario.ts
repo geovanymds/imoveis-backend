@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { SalarioController } from "../controllers";
+import { SalarioController} from "../controllers";
 import { IEntityRouter } from "./interfaces";
 import { IController, ISalarioController } from "../controllers/interfaces";
 
@@ -16,6 +16,6 @@ export default class UserRouter implements IEntityRouter {
   }
 
   routes() {
-    this.router.post("", this.controller.calculoSalario);
+    this.router.post("", this.controller.getSalario);
   }
 }

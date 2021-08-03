@@ -23,6 +23,10 @@ export default class CorretorController
         comissao,
       });
 
+      if(tipo == "Contratado" && typeof salario != "number" ){
+        throw new HttpException(400, "Parâmetros inválidos, Salario necessario para contratado");
+      }
+
       await CorretorModel.create(newCorretor);
 
       return res.status(200).json({
@@ -39,6 +43,9 @@ export default class CorretorController
     try {
       if (!id || typeof id != "string") {
         throw new HttpException(400, "Parâmetros inválidos.");
+      }
+      if(tipo == "Contratado" && typeof salario != "number" ){
+        throw new HttpException(400, "Parâmetros inválidos, Salario necessario para contratado");
       }
       const corretor = await CorretorModel.findById(id);
       if (!corretor) {

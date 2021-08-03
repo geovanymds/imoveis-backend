@@ -44,6 +44,7 @@ const CorretorSchema: mongoose.Schema = new mongoose.Schema({
   },
   creci: {
     type: String,
+    unique: true,
     required: true,
   },
   salario: {
