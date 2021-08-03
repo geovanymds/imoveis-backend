@@ -7,7 +7,7 @@ export default class ImageController implements IController, IImageController {
   async salvar(req: Request, res: Response, next: NextFunction): Promise<any> {
     const { originalname, filename, size } = <Express.Multer.File>req.file;
     try {
-      const url = `${process.env.APP_URL}/public/images/${filename}`;
+      const url = `${process.env.APP_URL}/imagem/${filename}`;
       const image = await ImageModel.create({
         nome: originalname,
         url,
