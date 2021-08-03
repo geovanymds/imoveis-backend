@@ -62,7 +62,6 @@ export default class ImovelController
       const imoveis = await ImovelModel.find()
         .where("tipo").in(JSON.parse(tipos))
         .where("vendido").equals(false);
-      console.log("aqui" + imoveis);
       return res.status(200).json({
         imoveis,
       });

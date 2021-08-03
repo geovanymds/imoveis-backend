@@ -63,7 +63,6 @@ export async function lucroImobiliaria(
   vendas.forEach(async (venda: any) => {
     let corretor = await CorretorModel.findOne({ creci: venda.creciCorretor });
     if (corretor) {
-      console.log("1" + corretor.comissao);
       soma += venda.valor * (corretor.comissao / 100);
     }
   });
@@ -106,10 +105,8 @@ export async function pagamentoCorretor(vendas: any): Promise<any> {
   const promises = vendas.map(async (venda: any) => {
     let corretor = await CorretorModel.findOne({ creci: venda.creciCorretor });
     if (corretores[venda.creciCorretor] && corretor) {
-      console.log("2" + corretor.comissao);
       corretores[venda.creciCorretor] += venda.valor * (corretor.comissao / 100);
     } else if (corretor) {
-      console.log("3" + corretor.comissao);
       corretores[venda.creciCorretor] = venda.valor * (corretor.comissao / 100);
     }
   });
@@ -125,10 +122,8 @@ export async function corretorMes(vendas: any): Promise<any> {
     let corretor = await CorretorModel.findOne({ creci: venda.creciCorretor });
 
     if (corretores[venda.creciCorretor] && corretor) {
-      console.log("4" + corretor.comissao);
       corretores[venda.creciCorretor] += venda.valor * (corretor.comissao / 100);
     } else if (corretor) {
-      console.log("5" + corretor.comissao);
       corretores[venda.creciCorretor] = venda.valor * (corretor.comissao / 100);
     }
     if (corretores[venda.creciCorretor] > corretorMes.valor) {
