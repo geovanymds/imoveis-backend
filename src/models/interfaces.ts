@@ -39,3 +39,11 @@ export interface IImage extends Document {
   nomeCompleto: string;
   url: string;
 }
+
+export interface IVenda {
+  codigoImovel: string;
+  idCorretor: string;
+  dataVenda: Date;
+  valor: number;
+  nomeComprador: string;
+}
