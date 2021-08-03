@@ -26,9 +26,7 @@ export interface IVendaController {
   alterar(req: Request, res: Response, next: NextFunction): Promise<any>;
 }
 
-export interface ISalarioController {
-  calculoSalario(req: Request, res: Response, next: NextFunction): Promise<any>;
-}
+export interface ISalarioController {}
 
 export interface IRelatorioController {
   getRelatorio(req: Request, res: Response, next: NextFunction): Promise<any>;
