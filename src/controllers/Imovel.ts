@@ -52,10 +52,10 @@ export default class ImovelController
       if (tipos == 'todos') {
         tipos = '["Casa","Apartamento","Sala Comercial","Lote","Chacara","Sitio","Fazenda"]'
       }
-      if (local == 'urbano' && Array.isArray(tipos)) {
+      if (local == 'urbano') {
         tipos = '["Casa", "Apartamento", "Sala Comercial", "Lote"]'
       }
-      else if (local == 'rural' && Array.isArray(tipos)) {
+      else if (local == 'rural') {
         tipos = '["Chacara", "Sitio", "Fazenda"]'
       }
 
