@@ -3,7 +3,7 @@ import { IVenda } from "./interfaces";
 
 export class Venda implements IVenda {
   codigoImovel: string;
-  idCorretor: string;
+  creciCorretor: string;
   dataVenda: Date;
   valor: number;
   nomeComprador: string;
@@ -11,13 +11,13 @@ export class Venda implements IVenda {
 
   constructor({
     codigoImovel,
-    idCorretor,
+    creciCorretor,
     dataVenda,
     valor,
     nomeComprador
   }: IVenda) {
     this.codigoImovel = codigoImovel;
-    this.idCorretor = idCorretor;
+    this.creciCorretor = creciCorretor;
     this.dataVenda = dataVenda;
     this.valor = valor;
     this.nomeComprador = nomeComprador;
@@ -29,7 +29,7 @@ const VendaSchema: mongoose.Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  idCorretor:{
+  creciCorretor:{
     type: String,
     required: true,
   },

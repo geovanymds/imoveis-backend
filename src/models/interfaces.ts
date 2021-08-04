@@ -42,7 +42,7 @@ export interface IImage extends Document {
 
 export interface IVenda {
   codigoImovel: string;
-  idCorretor: string;
+  creciCorretor: string;
   dataVenda: Date;
   valor: number;
   nomeComprador: string;

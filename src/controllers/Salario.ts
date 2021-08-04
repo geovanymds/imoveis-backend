@@ -12,13 +12,12 @@ export default class SalarioController
     res: Response,
     next: NextFunction
   ): Promise<any> {
-    const { mes, ano, idCorretor } = req.body;
+    const { mes, ano, creciCorretor } = req.body;
 
     const formatedStartMonth = ano+"-"+mes+"-"+"1";
     const startMonth = new Date(formatedStartMonth);
     const endMonth = endOfMonth(startMonth);
     console.log(startMonth);
-    console.log(endMonth);
     try {
       let vendas = await VendaModel.find({
         dataVenda: {
@@ -26,11 +25,11 @@ export default class SalarioController
           $lte: endMonth,
         },
       })
-        .where("idCorretor")
-        .equals(idCorretor);
-      let corretor = await CorretorModel.findById(idCorretor);
+        .where("creciCorretor")
+        .equals(creciCorretor);
+      let corretor = await CorretorModel.findOne({ creci: creciCorretor });
+      console.log(corretor);
       let response = calculoSalario(vendas, corretor);
-      console.log("aaa " + response);
       return res.status(200).json(response);
     } catch (error) {
       next(new HttpException(error.status || 500, error.message));
@@ -39,13 +38,12 @@ export default class SalarioController
 }
 
 export function calculoSalario(vendas: any, corretor: any): any {
+  console.log(vendas);
   let soma = 0.0;
-  console.log("saads " + corretor);
   if (corretor && corretor.tipo == "Comissionado") {
     vendas.forEach((venda: any) => {
       soma += venda.valor * (corretor.comissao / 100);
     });
-    console.log("bbb " + soma);
     return {
       message: "Salário calculado com sucesso.",
       comissao: soma,
@@ -54,7 +52,6 @@ export function calculoSalario(vendas: any, corretor: any): any {
     vendas.forEach((venda: any) => {
       soma += venda.valor * (corretor.comissao / 100);
     });
-    console.log("ccc " + soma);
     return {
       message: "Salário calculado com sucesso.",
       comissao: soma,

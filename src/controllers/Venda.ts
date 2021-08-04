@@ -9,19 +9,19 @@ export default class VendaController implements IController, IVendaController {
     res: Response,
     next: NextFunction
   ): Promise<any> {
-    const { codigoImovel, idCorretor, dataVenda, valor, nomeComprador } =
+    const { codigoImovel, creciCorretor, dataVenda, valor, nomeComprador } =
       req.body;
 
     try {
       const newVenda = new Venda({
         codigoImovel,
-        nomeCorretor,
+        creciCorretor,
         dataVenda,
         valor,
         nomeComprador,
       });
 
-      const corretor = await CorretorModel.findOne({ creci: nomeCorretor });
+      const corretor = await CorretorModel.findOne({ creci: creciCorretor });
 
       if (!corretor) {
         throw new HttpException(403, "Corretor não cadastrado.");
@@ -48,7 +48,7 @@ export default class VendaController implements IController, IVendaController {
 
   async alterar(req: Request, res: Response, next: NextFunction): Promise<any> {
     const { id } = req.params;
-    const { codigoImovel, idCorretor, dataVenda, valor, nomeComprador } =
+    const { codigoImovel, creciCorretor, dataVenda, valor, nomeComprador } =
       req.body;
     try {
       if (!id || typeof id != "string") {
@@ -59,7 +59,7 @@ export default class VendaController implements IController, IVendaController {
         throw new HttpException(404, "Venda não encontrado.");
       }
       venda.codigoImovel = !!codigoImovel ? codigoImovel : venda.codigoImovel;
-      venda.idCorretor = !!idCorretor ? idCorretor : venda.idCorretor;
+      venda.creciCorretor = !!creciCorretor ? creciCorretor : venda.creciCorretor;
       venda.dataVenda = !!dataVenda ? dataVenda : venda.dataVenda;
       venda.valor = !!valor ? valor : venda.valor;
       venda.nomeComprador = !!nomeComprador

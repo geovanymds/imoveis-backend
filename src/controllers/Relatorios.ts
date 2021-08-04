@@ -6,8 +6,7 @@ import endOfMonth from "date-fns/endOfMonth";
 import { subMonths } from "date-fns";
 
 export default class RelatorioController
-  implements IController, IRelatorioController
-{
+  implements IController, IRelatorioController {
   async getRelatorio(
     req: Request,
     res: Response,
@@ -62,7 +61,7 @@ export async function lucroImobiliaria(
   let soma = 0.0;
 
   vendas.forEach(async (venda: any) => {
-    let corretor = await CorretorModel.findById(venda.idCorretor);
+    let corretor = await CorretorModel.findOne({ creci: venda.creciCorretor });
     if (corretor) {
       soma += venda.valor * (corretor.comissao / 100);
     }
@@ -92,10 +91,10 @@ export async function faturamentoCorretor(vendas: any): Promise<any> {
   let corretores = {} as any;
 
   vendas.forEach(async (venda: any) => {
-    if (corretores[venda.idCorretor]) {
-      corretores[venda.idCorretor] += venda.valor * 0.05;
+    if (corretores[venda.creciCorretor]) {
+      corretores[venda.creciCorretor] += venda.valor * 0.05;
     } else {
-      corretores[venda.idCorretor] = venda.valor * 0.05;
+      corretores[venda.creciCorretor] = venda.valor * 0.05;
     }
   });
   return corretores;
@@ -103,14 +102,15 @@ export async function faturamentoCorretor(vendas: any): Promise<any> {
 
 export async function pagamentoCorretor(vendas: any): Promise<any> {
   let corretores = {} as any;
-  vendas.forEach(async (venda: any) => {
-    let corretor = await CorretorModel.findById(venda.idCorretor);
-    if (corretores[venda.idCorretor] && corretor) {
-      corretores[venda.idCorretor] += venda.valor * (corretor.comissao / 100);
+  const promises = vendas.map(async (venda: any) => {
+    let corretor = await CorretorModel.findOne({ creci: venda.creciCorretor });
+    if (corretores[venda.creciCorretor] && corretor) {
+      corretores[venda.creciCorretor] += venda.valor * (corretor.comissao / 100);
     } else if (corretor) {
-      corretores[venda.idCorretor] = venda.valor * (corretor.comissao / 100);
+      corretores[venda.creciCorretor] = venda.valor * (corretor.comissao / 100);
     }
   });
+  await Promise.all(promises);
   return corretores;
 }
 
@@ -119,16 +119,16 @@ export async function corretorMes(vendas: any): Promise<any> {
   let corretores = {} as any;
 
   const promises = vendas.map(async (venda: any) => {
-    let corretor = await CorretorModel.findById(venda.idCorretor);
+    let corretor = await CorretorModel.findOne({ creci: venda.creciCorretor });
 
-    if (vendas[venda.idCorretor] && corretor) {
-      corretores[venda.idCorretor] += venda.valor * (corretor.comissao / 100);
+    if (corretores[venda.creciCorretor] && corretor) {
+      corretores[venda.creciCorretor] += venda.valor * (corretor.comissao / 100);
     } else if (corretor) {
-      corretores[venda.idCorretor] = venda.valor * (corretor.comissao / 100);
+      corretores[venda.creciCorretor] = venda.valor * (corretor.comissao / 100);
     }
-    if (corretores[venda.idCorretor] > corretorMes.valor) {
-      corretorMes.codigo = venda.idCorretor;
-      corretorMes.valor = corretores[venda.idCorretor];
+    if (corretores[venda.creciCorretor] > corretorMes.valor) {
+      corretorMes.codigo = venda.creciCorretor;
+      corretorMes.valor = corretores[venda.creciCorretor];
     }
   });
   corretorMes.valor =
