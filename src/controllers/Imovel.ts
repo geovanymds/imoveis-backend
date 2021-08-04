@@ -97,6 +97,21 @@ export default class ImovelController
   }
 
   async deletar(req: Request, res: Response, next: NextFunction): Promise<any> {
+    const { codigo } = req.params;
+    try {
+      if (!codigo) {
+        throw new HttpException(400, "Parâmetros inválidos.");
+      }
+      await ImovelModel.deleteOne().where("codigo").equals(codigo);
+
+      return res.status(200).json({
+        message: "Imovel deletados com sucesso"
+      });
+    } catch (error) {
+      next(new HttpException(error.status || 500, error.message));
+    }
+  }
+  async deletarLista(req: Request, res: Response, next: NextFunction): Promise<any> {
     const { codigos } = req.body;
     try {
       if (!codigos) {
@@ -105,7 +120,7 @@ export default class ImovelController
       await ImovelModel.deleteMany().where("codigo").in(codigos);
 
       return res.status(200).json({
-        message: "Imovel(is) deletados com sucesso"
+        message: "Imoveis deletados com sucesso"
       });
     } catch (error) {
       next(new HttpException(error.status || 500, error.message));

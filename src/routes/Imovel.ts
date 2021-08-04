@@ -19,6 +19,7 @@ export default class UserRouter implements IEntityRouter {
     this.router.post("/cadastrar", this.controller.cadastrar);
     this.router.get("/listar", this.controller.listar);
     this.router.put("/alterar/:id", this.controller.alterar);
-    this.router.post("/deletar", this.controller.deletar);
+    this.router.delete("/deletar/:codigo", this.controller.deletar);
+    this.router.post("/deletarLista", this.controller.deletarLista);
   }
 }
