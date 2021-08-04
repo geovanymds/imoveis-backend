@@ -30,7 +30,7 @@ export default class RelatorioController
         relatorio.faturamentoTotal,
         vendas
       );
-      relatorio.imoveisVendidos = await imoveisVendidos();
+      relatorio.imoveisVendidos = await imoveisVendidos(vendas);
       relatorio.imoveisEncalhados = await imoveisEncalhados(ano, mes);
       relatorio.faturamentoCorretor = await faturamentoCorretor(vendas);
       relatorio.pagamentoCorretor = await pagamentoCorretor(vendas);
@@ -76,18 +76,25 @@ export async function lucroImobiliaria(
   return lucro;
 }
 
-export async function imoveisVendidos(): Promise<any> {
-  let imoveis = await ImovelModel.find({ vendido: true });
+export async function imoveisVendidos(vendas: any): Promise<any> {
+  let codigoImoveis = [] as any;
+  await Promise.all(
+    vendas.map(async (venda: any) => {
+      codigoImoveis.push(venda.codigoImovel);
+    })
+  );
+  let imoveis = await ImovelModel.find({
+    vendido: true,
+    codigo: { $in: codigoImoveis },
+  });
   return imoveis;
 }
 
 export async function imoveisEncalhados(
-  ano: number,
-  mes: number
+  mes: number,
+  ano: number
 ): Promise<any> {
-  const dateString = `${ano}-${mes}-1`;
-  let dataLimite = subMonths(new Date(dateString), 6);
-  console.log(dataLimite);
+  let dataLimite = subMonths(new Date(ano, mes - 1, 1), 6);
   let imoveisEncalhados = await ImovelModel.find({
     vendido: false,
     dataDeCadastro: {
@@ -112,16 +119,20 @@ export async function faturamentoCorretor(vendas: any): Promise<any> {
 
 export async function pagamentoCorretor(vendas: any): Promise<any> {
   let corretores = {} as any;
-  const promises = vendas.map(async (venda: any) => {
-    let corretor = await CorretorModel.findOne({ creci: venda.creciCorretor });
-    if (corretores[venda.creciCorretor] && corretor) {
-      corretores[venda.creciCorretor] +=
-        venda.valor * (corretor.comissao / 100);
-    } else if (corretor) {
-      corretores[venda.creciCorretor] = venda.valor * (corretor.comissao / 100);
-    }
-  });
-  await Promise.all(promises);
+  await Promise.all(
+    vendas.map(async (venda: any) => {
+      let corretor = await CorretorModel.findOne({
+        creci: venda.creciCorretor,
+      });
+      if (corretores[venda.creciCorretor] && corretor) {
+        corretores[venda.creciCorretor] +=
+          venda.valor * (corretor.comissao / 100);
+      } else if (corretor) {
+        corretores[venda.creciCorretor] =
+          venda.valor * (corretor.comissao / 100);
+      }
+    })
+  );
   return corretores;
 }
 
