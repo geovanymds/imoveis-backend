@@ -6,7 +6,7 @@ export class Imovel implements IImovel {
   codigo: string;
   tipo: tiposImovel;
   descricao: string;
-  nomeDoVendedor: string;
+  proprietarioDoImovel: string;
   precoSolicitado: number;
   imagem: string;
   dataDeCadastro: Date;
@@ -16,7 +16,7 @@ export class Imovel implements IImovel {
     codigo,
     tipo,
     descricao,
-    nomeDoVendedor,
+    proprietarioDoImovel,
     precoSolicitado,
     imagem,
     dataDeCadastro,
@@ -25,7 +25,7 @@ export class Imovel implements IImovel {
     this.codigo = codigo;
     this.tipo = tipo;
     this.descricao = descricao;
-    this.nomeDoVendedor = nomeDoVendedor;
+    this.proprietarioDoImovel = proprietarioDoImovel;
     this.precoSolicitado = precoSolicitado;
     this.imagem = imagem;
     this.dataDeCadastro = dataDeCadastro;
@@ -40,6 +40,7 @@ export class Imovel implements IImovel {
 const ImovelSchema: mongoose.Schema = new mongoose.Schema({
   codigo: {
     type: String,
+    unique: true,
     required: true,
   },
   tipo: {
@@ -51,7 +52,7 @@ const ImovelSchema: mongoose.Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  nomeDoVendedor: {
+  proprietarioDoImovel: {
     type: String,
     required: true,
   },

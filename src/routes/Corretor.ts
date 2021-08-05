@@ -1,17 +1,17 @@
 import { Router } from "express";
-import { ImovelController } from "../controllers";
+import { CorretorController } from "../controllers";
 import { IEntityRouter } from "./interfaces";
-import { IController, IImovelController } from "../controllers/interfaces";
+import { IController, ICorretorController } from "../controllers/interfaces";
 
 export default class UserRouter implements IEntityRouter {
   uri: string;
   router: Router;
-  controller: IController & IImovelController;
+  controller: IController & ICorretorController;
 
   constructor() {
-    this.uri = "/imovel";
+    this.uri = "/corretor";
     this.router = Router();
-    this.controller = new ImovelController();
+    this.controller = new CorretorController();
     this.routes();
   }
 
@@ -19,7 +19,5 @@ export default class UserRouter implements IEntityRouter {
     this.router.post("/cadastrar", this.controller.cadastrar);
     this.router.get("/listar", this.controller.listar);
     this.router.put("/alterar/:id", this.controller.alterar);
-    this.router.delete("/deletar/:codigo", this.controller.deletar);
-    this.router.post("/deletarLista", this.controller.deletarLista);
   }
 }

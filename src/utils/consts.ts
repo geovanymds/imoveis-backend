@@ -1,9 +1,9 @@
 export const TIPOS_DE_IMOVEIS = [
   "Casa",
   "Apartamento",
-  "Sala comercial",
+  "Sala Comercial",
   "Lote",
-  "Chácara",
-  "Sítio",
+  "Chacara",
+  "Sitio",
   "Fazenda",
 ];
