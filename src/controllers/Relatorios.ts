@@ -80,13 +80,9 @@ export async function imoveisVendidos(vendas: any): Promise<any> {
   let codigoImoveis = [] as any;
   const promises = vendas.map(async (venda: any) => {
     codigoImoveis.push(venda.codigoImovel);
-  });
+  });  
   await Promise.all(promises);
-  let imoveis = await ImovelModel.find({
-    vendido: true,
-    codigo: { $in: codigoImoveis },
-  });
-  console.log(imoveis);
+  let imoveis = await ImovelModel.find({ vendido: true, codigo:{ $in: codigoImoveis} });
   return imoveis;
 }
 
@@ -114,7 +110,14 @@ export async function faturamentoCorretor(vendas: any): Promise<any> {
       corretores[venda.creciCorretor] = venda.valor * 0.05;
     }
   });
-  return corretores;
+  let crecis = Object.keys(vendas);
+  let response = [] as any;
+  await Promise.all(
+    crecis.map(async (creci: any) => {
+      response.push({creci, valor: corretores[creci] })
+    })    
+  );
+  return response;
 }
 
 export async function pagamentoCorretor(vendas: any): Promise<any> {
@@ -140,9 +143,16 @@ export async function pagamentoCorretor(vendas: any): Promise<any> {
         corretores[venda.creciCorretor] =
           venda.valor * (corretor.comissao / 100);
       }
-    })
+    })    
   );
-  return corretores;
+  let crecis = Object.keys(corretores);
+  let response = [] as any;
+  await Promise.all(
+    crecis.map(async (creci: any) => {
+      response.push({creci, valor: corretores[creci] })
+    })    
+  );
+  return response;
 }
 
 export async function corretorMes(vendas: any): Promise<any> {
