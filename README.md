@@ -28,5 +28,3 @@ ou
 make up
 ```
 
-## OBSERVAÇÃO IMPORTANTE
-Como eu coloquei usuário e senha pro container ele espera ambos caso seja executado sem o docker, bem como as variáveis de ambiente. Farei essa alteração mais breve possível, porém está sendo executado normalmente com o docker. 
