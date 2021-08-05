@@ -19,12 +19,3 @@ npm start
 ```
 Se tudo ocorreu como o esperado a mensagem 'Listening on port 8000':
 
-Opcionalmente é possível rodar o backend utilizando o docker-compose. Para isso basta utilizar uma das opções abaixo no terminal:
-```
-docker-compose up
-```
-ou
-```
-make up
-```
-
