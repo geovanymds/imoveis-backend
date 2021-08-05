@@ -95,6 +95,7 @@ export default class ImovelController
       imovel.dataDeCadastro = dataDeCadastro;
       imovel.proprietarioDoImovel = proprietarioDoImovel;
       imovel.precoSolicitado = precoSolicitado;
+      imovel.dataDeCadastro = dataDeCadastro;
       const imovelSalvo = await imovel.save();
       return res.status(200).json({
         imovelSalvo,
