@@ -31,7 +31,7 @@ export default class RelatorioController
         vendas
       );
       relatorio.imoveisVendidos = await imoveisVendidos(vendas);
-      relatorio.imoveisEncalhados = await imoveisEncalhados(ano, mes);
+      relatorio.imoveisEncalhados = await imoveisEncalhados(mes, ano);
       relatorio.faturamentoCorretor = await faturamentoCorretor(vendas);
       relatorio.pagamentoCorretor = await pagamentoCorretor(vendas);
       relatorio.corretorMes = await corretorMes(vendas);
@@ -78,15 +78,15 @@ export async function lucroImobiliaria(
 
 export async function imoveisVendidos(vendas: any): Promise<any> {
   let codigoImoveis = [] as any;
-  await Promise.all(
-    vendas.map(async (venda: any) => {
-      codigoImoveis.push(venda.codigoImovel);
-    })
-  );
+  const promises = vendas.map(async (venda: any) => {
+    codigoImoveis.push(venda.codigoImovel);
+  });
+  await Promise.all(promises);
   let imoveis = await ImovelModel.find({
     vendido: true,
     codigo: { $in: codigoImoveis },
   });
+  console.log(imoveis);
   return imoveis;
 }
 
@@ -119,6 +119,15 @@ export async function faturamentoCorretor(vendas: any): Promise<any> {
 
 export async function pagamentoCorretor(vendas: any): Promise<any> {
   let corretores = {} as any;
+
+  let corretoresCollection = await CorretorModel.find()
+    .where("tipo")
+    .equals("Contratado");
+  await Promise.all(
+    corretoresCollection.map(async (corretor: any) => {
+      corretores[corretor.creci] = corretor.salario;
+    })
+  );
   await Promise.all(
     vendas.map(async (venda: any) => {
       let corretor = await CorretorModel.findOne({

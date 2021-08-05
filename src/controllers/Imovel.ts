@@ -4,7 +4,8 @@ import { IController, IImovelController } from "./interfaces";
 import HttpException from "../helpers/httpException";
 
 export default class ImovelController
-  implements IController, IImovelController {
+  implements IController, IImovelController
+{
   async cadastrar(
     req: Request,
     res: Response,
@@ -49,23 +50,24 @@ export default class ImovelController
       if (!tipos || typeof tipos != "string") {
         throw new HttpException(400, "Parâmetros inválidos.");
       }
-      if (tipos == 'todos') {
-        tipos = '["Casa","Apartamento","Sala Comercial","Lote","Chacara","Sitio","Fazenda"]'
+      if (tipos == "todos") {
+        tipos =
+          '["Casa","Apartamento","Sala Comercial","Lote","Chacara","Sitio","Fazenda"]';
       }
-      if (local == 'urbano') {
-        tipos = '["Casa", "Apartamento", "Sala Comercial", "Lote"]'
-      }
-      else if (local == 'rural') {
-        tipos = '["Chacara", "Sitio", "Fazenda"]'
+      if (local == "urbano") {
+        tipos = '["Casa", "Apartamento", "Sala Comercial", "Lote"]';
+      } else if (local == "rural") {
+        tipos = '["Chacara", "Sitio", "Fazenda"]';
       }
 
       const imoveis = await ImovelModel.find()
-        .where("tipo").in(JSON.parse(tipos))
-        .where("vendido").equals(false);
+        .where("tipo")
+        .in(JSON.parse(tipos))
+        .where("vendido")
+        .equals(false);
       return res.status(200).json({
         imoveis,
       });
-
     } catch (error) {
       next(new HttpException(error.status || 500, error.message));
     }
@@ -73,8 +75,13 @@ export default class ImovelController
 
   async alterar(req: Request, res: Response, next: NextFunction): Promise<any> {
     const { id } = req.params;
-    const { descricao, proprietarioDoImovel, precoSolicitado, imagem } =
-      req.body;
+    const {
+      descricao,
+      proprietarioDoImovel,
+      precoSolicitado,
+      imagem,
+      dataDeCadastro,
+    } = req.body;
     try {
       if (!id || typeof id != "string") {
         throw new HttpException(400, "Parâmetros inválidos.");
@@ -85,6 +92,7 @@ export default class ImovelController
       }
       imovel.imagem = !!imagem ? imagem : imovel.imagem;
       imovel.descricao = descricao;
+      imovel.dataDeCadastro = dataDeCadastro;
       imovel.proprietarioDoImovel = proprietarioDoImovel;
       imovel.precoSolicitado = precoSolicitado;
       const imovelSalvo = await imovel.save();
@@ -105,13 +113,17 @@ export default class ImovelController
       await ImovelModel.deleteOne().where("codigo").equals(codigo);
 
       return res.status(200).json({
-        message: "Imovel deletados com sucesso"
+        message: "Imovel deletados com sucesso",
       });
     } catch (error) {
       next(new HttpException(error.status || 500, error.message));
     }
   }
-  async deletarLista(req: Request, res: Response, next: NextFunction): Promise<any> {
+  async deletarLista(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
     const { codigos } = req.body;
     try {
       if (!codigos) {
@@ -120,7 +132,7 @@ export default class ImovelController
       await ImovelModel.deleteMany().where("codigo").in(codigos);
 
       return res.status(200).json({
-        message: "Imoveis deletados com sucesso"
+        message: "Imoveis deletados com sucesso",
       });
     } catch (error) {
       next(new HttpException(error.status || 500, error.message));
